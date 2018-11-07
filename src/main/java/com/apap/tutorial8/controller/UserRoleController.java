@@ -35,17 +35,19 @@ public class UserRoleController<GenericResponse> {
     }
 
     @GetMapping(value="/profile")
-    public String viewUserProfile(@RequestParam("username") String username, Model model) {
-        model.addAttribute("changePassword", new ChangePasswordModel());
+    public String viewUserProfile() {
         return "profile";
-    }
-    
+	}
+	
+	@GetMapping(value="/update-success")
+	public String updateSuccess() {
+		return "update-success";
+	}
+	
     @PostMapping("/updatePassword")
     private ModelAndView updatePass(@ModelAttribute ChangePasswordModel pass, Model model, RedirectAttributes redirect) {
     	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		UserRoleModel user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-		System.out.println(user.getUsername());
-		System.out.println("lalala");
 		
 		String msg = "";
 		
@@ -61,7 +63,7 @@ public class UserRoleController<GenericResponse> {
 		else {
 			msg = "Password baru tidak sesuai!";
 		}
-		ModelAndView modelAndView = new ModelAndView("redirect:/");
+		ModelAndView modelAndView = new ModelAndView("redirect:/user/update-success");
 		redirect.addFlashAttribute("msg", msg);
 		return modelAndView;
     }
